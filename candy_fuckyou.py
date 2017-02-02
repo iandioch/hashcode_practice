@@ -78,7 +78,7 @@ class Board:
                     if self.get(Cord(x, next_y)) is not None:
                         break
                     next_y -= 1
-                if next_y > 0:
+                if next_y >= 0:
                     # Good one found
                     self.swap(curr_cord, Cord(x, next_y))
                 else:
@@ -164,17 +164,34 @@ for y in range(H):
 
 board = Board(b, buf)
 board.destroy()
+
+bestmoves = []
+"""
+    [28,10,28,11],
+    [27,16,26,16],
+    [28,15,28,18],
+    [24,16,24,17],
+]
+"""
+
+for move in bestmoves:
+    print (','.join([str(x) for x in move]))
+    board.swap(Cord(move[1], move[0]), Cord(move[3], move[2]))
+    board.destroy()
+    
 #print(b)
 
 #print(board.score_for_swap(Cord(0, 0), Cord(0 ,1)))
 
-for movelol in range(1):
+for movelol in range(M-len(bestmoves)):
     bestscore = 0
     bestquad = [0,0,0,0]
     for x in range(W-1):
         for y in range(H-1, -1, -1):
             newbuf = copy.deepcopy(buf) 
             newb = copy.deepcopy(b)
+            if newb[x][y] == newb[x+1][y]:
+                continue
             newboard = Board(newb, newbuf)
             newboard.swap(Cord(x, y), Cord(x+1, y))
             newboard.destroy()
@@ -186,6 +203,8 @@ for movelol in range(1):
         for y in range(H-1, 0, -1):
             newbuf = copy.deepcopy(buf) 
             newb = copy.deepcopy(b)
+            if newb[x][y] == newb[x][y-1]:
+                continue
             newboard = Board(newb, newbuf)
             newboard.swap(Cord(x, y), Cord(x, y-1))
             newboard.destroy()
